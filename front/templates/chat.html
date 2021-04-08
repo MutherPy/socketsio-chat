@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo sockets chat</title>
+    <link rel="stylesheet" href="static/styles/chat.css">
+</head>
+<body>
+    <fieldset>
+        <legend>Chat</legend>
+        <div id="chat_area" class="chat_window">
+        </div>
+
+        <form name="message_form" id="message_form" class="message_form_window">
+            <label for="msg_input">My message</label>
+            <input id="msg_input" name="message" value="asd">
+            <button type="button">Send</button>
+        </form>
+    </fieldset>
+    <fieldset>
+        <legend>Files</legend>
+        <form name="files_form" id="files_form" class="files_form_window">
+            <label for="files_input">Share your file</label>
+            <input type="file" id="files_input" name="file">
+            <button type="button">Send file to room</button>
+        </form>
+    </fieldset>
+</body>
+<script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+<script type="module" src="static/scripts/chat.js"></script>
+</html>

@@ -1,0 +1,8 @@
+#entering_form{
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+    }
+    #enter_btn{
+        margin-top: 10px;
+    }
