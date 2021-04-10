@@ -8,7 +8,7 @@ def encrypt_path(path: str, key: bytes) -> str:
     return encrypted_path.decode('utf-8')
 
 
-def decrypt_path(e_path: t.Union[str, int, bytes], key: bytes) -> t.Union[str, None]:
+def decrypt_path(e_path: t.Union[str, bytes], key: bytes) -> t.Union[str, None]:
     f = Fernet(key)
     if not isinstance(e_path, bytes):
         e_path = bytes(e_path, encoding='utf-8')

@@ -1,5 +1,5 @@
-from fastapi import File, UploadFile, Depends
-from fastapi.responses import HTMLResponse
+from fastapi import File, UploadFile, Depends, Form
+from fastapi.responses import HTMLResponse, JSONResponse
 
 from fastapi_part import app
 from fastapi_part.services import saving_shared_files
@@ -12,6 +12,14 @@ async def start(setting: FastApiSettings = Depends(fast_api_settings)):
     with open(f'{setting.TEMPLATES_DIR}/index.html', 'r') as index:
         resp = index.read()
         return HTMLResponse(resp, status_code=200)
+
+
+@app.post('/login')
+async def login(username: str = Form(...), password: str = Form(...)):
+    #
+    # TODO Probably DB with users
+    #
+    return JSONResponse({'token': username})
 
 
 @app.get('/chat')
@@ -27,8 +35,8 @@ async def sharing(room: str, file: UploadFile = File(...)):
     return {'file_token': e_path}
 
 
-@app.get('/download')
-async def download(token: str, setting: FastApiSettings = Depends(fast_api_settings)):
+@app.get('/chat/download/{room}')
+async def download(room: str, token: str, setting: FastApiSettings = Depends(fast_api_settings)):
     print(token)
     from .services.crypto_deals import decrypt_path
     print(decrypt_path(token, setting.SECRET_KEY))

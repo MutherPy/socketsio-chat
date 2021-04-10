@@ -2,7 +2,6 @@ import os
 import typing as t
 from pydantic import BaseSettings
 from functools import lru_cache
-from fernet import Fernet
 
 
 def get_as_dict(source) -> dict:
@@ -17,7 +16,7 @@ class FastApiSettings(BaseSettings):
     STATIC_DIR: str = FRONT_DIR + '/static'
     TEMPLATES_DIR: str = FRONT_DIR + '/templates'
     MEDIA_DIR: str = 'media'
-    SECRET_KEY: bytes = Fernet.generate_key()
+    SECRET_KEY: bytes = b'o8ZSt2xvSfLoLsRtcX2i7j0vsgFlallLFUs8ylf5cwA='
 
 
 class UvicornSettings(BaseSettings):

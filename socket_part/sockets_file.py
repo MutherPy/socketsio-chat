@@ -21,7 +21,7 @@ async def connect(sid, environ, auth):
     response = dict(
         sid=sid
     )
-    username, password = authentication(auth=auth)
+    username = authentication(auth=auth)
     response['username'] = username
     if not query['room']:
         # TODO mb add func to generating room

@@ -8,8 +8,7 @@ if (room){
 
 let socket = io(server_address, {
     auth: {
-        username: "Alex",
-        password: ""
+        'token': localStorage.getItem('jwt')
     }
 });
 
