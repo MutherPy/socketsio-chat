@@ -1,8 +1,8 @@
 from fastapi import File, UploadFile, Depends, Form
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 
 from fastapi_part import app
-from fastapi_part.services import saving_shared_files
+from fastapi_part.services import saving_shared_files, giving_shared_file
 
 from database_part import db
 
@@ -33,12 +33,10 @@ async def enter(setting: FastApiSettings = Depends(fast_api_settings)):
 @app.post('/chat/sharing_file')
 async def sharing(room: str, file: UploadFile = File(...)):
     e_path = await saving_shared_files(room=room, file=file)
-    return {'file_token': e_path}
+    return {'file_token': e_path, 'download_path': '/chat/download/'}
 
 
-@app.get('/chat/download/{room}')
-async def download(room: str, token: str, setting: FastApiSettings = Depends(fast_api_settings)):
-    print(token)
-    from .services.crypto_deals import decrypt_path
-    print(decrypt_path(token, setting.SECRET_KEY))
-    return 'hello'
+@app.get('/chat/download/')
+async def download(token: str, setting: FastApiSettings = Depends(fast_api_settings)):
+    file_obj = await giving_shared_file(token)
+    return FileResponse(file_obj)

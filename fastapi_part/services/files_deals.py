@@ -17,5 +17,6 @@ async def saving_shared_files(room: str, file: UploadFile, setting: FastApiSetti
     return encrypt_path(path, setting.SECRET_KEY)
 
 
-async def spreading_shared_files(room: str, setting: FastApiSettings = fast_api_settings()):
-    pass
+async def giving_shared_file(token: str, setting: FastApiSettings = fast_api_settings()):
+    path = decrypt_path(token, setting.SECRET_KEY)
+    return path

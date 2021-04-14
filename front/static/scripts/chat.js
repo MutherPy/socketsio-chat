@@ -45,8 +45,10 @@ files_form.getElementsByTagName('button')[0].addEventListener(
     file_request.onreadystatechange = function () {
         if (file_request.readyState === XMLHttpRequest.DONE) {
             files_form['file'].value = ''
-            let file_token = JSON.parse(file_request.responseText)['file_token']
-            let full = new URL('download', window.location.origin)
+            let parsed_resp = JSON.parse(file_request.responseText)
+            let file_token = parsed_resp['file_token']
+            let download_path = parsed_resp['download_path']
+            let full = new URL(download_path, window.location.origin)
             full.searchParams.append('token', file_token)
             alert(full)
             socket.emit('msg', full.toString())
