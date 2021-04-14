@@ -1,0 +1,1 @@
+by default, nginx works on 6626 port.

@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  rtc_nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+      args:
+        - DOMAIN=test-b.jellyfish.tech
+        - EMAIL=example@gmail.com
+    network_mode: host
+    volumes:
+      - ./data/letsencrypt:/etc/letsencrypt
+      - ./nginx/conf:/etc/nginx/conf.d
+      - ../front:/etc/nginx/front
+  chat:
+    build: .
+    ports:
+      - 8003:8003
