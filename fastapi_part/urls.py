@@ -4,6 +4,8 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi_part import app
 from fastapi_part.services import saving_shared_files
 
+from database_part import db
+
 from settings import fast_api_settings, FastApiSettings
 
 
@@ -16,10 +18,9 @@ async def start(setting: FastApiSettings = Depends(fast_api_settings)):
 
 @app.post('/login')
 async def login(username: str = Form(...), password: str = Form(...)):
-    #
-    # TODO Probably DB with users
-    #
-    return JSONResponse({'token': username})
+    async with db:
+        user = db.get_user(username, password)
+    return JSONResponse({'token': user})
 
 
 @app.get('/chat')

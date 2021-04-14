@@ -1,11 +1,15 @@
 export {create_message, check_room, user_storage}
 
-let user_storage = function (sid, name=''){
-    let username = window.sessionStorage.getItem(sid)
-    if (username === null){
-        window.sessionStorage.setItem(sid, name)
-        username = name
+let user_storage = function (sid, name, old_users){
+    for (let user_sid in old_users){
+        window.sessionStorage.setItem(user_sid, old_users[user_sid])
     }
+    let username = window.sessionStorage.getItem(sid)
+    console.log(old_users)
+    // if (username === null){
+    //     window.sessionStorage.setItem(sid, name)
+    //     username = name
+    // }
     return username
 }
 

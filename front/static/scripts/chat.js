@@ -18,7 +18,7 @@ let files_form = document.getElementById('files_form')
 
 socket.on('ready', (msg) => {
     console.log('ready', msg)
-    user_storage(msg.sid, msg.username)
+    user_storage(msg.sid, msg.username, msg.old_users)
 })
 
 socket.on('msg', (msg) => {

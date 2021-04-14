@@ -1,6 +1,7 @@
 __pacache__
 Issues
-virt
+virt/
+media/
 .idea
 *.pyc
 

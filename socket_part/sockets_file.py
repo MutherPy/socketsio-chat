@@ -8,6 +8,7 @@ from socket_part.services import (
     get_room,
     authentication
 )
+from database_part import db
 
 
 ROOM = 'common'
@@ -18,19 +19,20 @@ sio = socketio.AsyncServer(cors_allowed_origins='*', async_mode='asgi', logger=T
 @sio.event
 async def connect(sid, environ, auth):
     query = get_query_values(environ=environ, needed_params=('room',))
-    response = dict(
-        sid=sid
-    )
-    username = authentication(auth=auth)
+    response = dict()
+    response['sid'] = sid
+    username = await authentication(auth=auth)
     response['username'] = username
     if not query['room']:
-        # TODO mb add func to generating room
-        # room = ''.join(string.ascii_letters[randint(0, len(string.ascii_letters)-1)] for i in range(10))
         room = ROOM
     else:
         room = query['room']
     sio.enter_room(sid=sid, room=room)
     response['room'] = room
+    async with db:
+        await db.add_room_member(room=room, sid=sid, username=username)
+        response['old_users'] = await db.get_room_members(room=room)
+    log_print(response=response)
     await sio.emit('ready', response, room=room, skip_sid=False)
 
 # @sio.event
@@ -66,4 +68,6 @@ async def disconnect(sid):
     room_data = sio.rooms(sid=sid)
     room = get_room(list_to_extract_room_from=room_data, sid=sid)
     log_print(room=room)
+    async with db:
+        await db.remove_member(room=room, sid=sid)
     sio.leave_room(sid=sid, room=room)
