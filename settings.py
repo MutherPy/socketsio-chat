@@ -4,13 +4,6 @@ from pydantic import BaseSettings
 from functools import lru_cache
 
 
-def get_as_dict(source) -> dict:
-    response_dict = dict()
-    for field in source:
-        response_dict[field[0]] = getattr(source, field[0])
-    return response_dict
-
-
 class FastApiSettings(BaseSettings):
     FRONT_DIR: str = 'front'
     STATIC_DIR: str = FRONT_DIR + '/static'
@@ -32,10 +25,6 @@ class UvicornSettings(BaseSettings):
     ]
 
 
-# uvicorn_settings = UvicornSettings()
-# fast_api_settings = FastApiSettings()
-
-
 @lru_cache()
 def uvicorn_settings():
     return UvicornSettings()
@@ -49,7 +38,6 @@ def fast_api_settings():
 __all__ = [
     'uvicorn_settings',
     'fast_api_settings',
-    'get_as_dict',
     'FastApiSettings',
     'UvicornSettings',
 ]

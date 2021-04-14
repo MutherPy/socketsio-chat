@@ -2,10 +2,9 @@
 .chat_window{
     display: flex;
     flex-direction: column;
-    width: 400px;
+    width: 800px;
     height: 200px;
     border: 1px solid black;
-
     overflow-y: scroll;
 }
 .chat_window > .chat_window_row{

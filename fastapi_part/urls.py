@@ -2,7 +2,9 @@ from fastapi import File, UploadFile, Depends, Form
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 
 from fastapi_part import app
-from fastapi_part.services import saving_shared_files, giving_shared_file
+from fastapi_part.services import (saving_shared_files,
+                                   giving_shared_file,
+                                   encrypt_jwt)
 
 from database_part import db
 
@@ -17,10 +19,12 @@ async def start(setting: FastApiSettings = Depends(fast_api_settings)):
 
 
 @app.post('/login')
-async def login(username: str = Form(...), password: str = Form(...)):
+async def login(username: str = Form(...), password: str = Form(...),
+                setting: FastApiSettings = Depends(fast_api_settings)):
     async with db:
         user = db.get_user(username, password)
-    return JSONResponse({'token': user})
+    token = encrypt_jwt(user, setting.SECRET_KEY)
+    return JSONResponse({'token': token})
 
 
 @app.get('/chat')
@@ -39,4 +43,7 @@ async def sharing(room: str, file: UploadFile = File(...)):
 @app.get('/chat/download/')
 async def download(token: str, setting: FastApiSettings = Depends(fast_api_settings)):
     file_obj = await giving_shared_file(token)
-    return FileResponse(file_obj)
+    if file_obj:
+        return FileResponse(file_obj)
+    else:
+        return '404'

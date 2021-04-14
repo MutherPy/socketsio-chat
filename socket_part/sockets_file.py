@@ -1,7 +1,4 @@
 import socketio
-import string
-from random import randint
-from pprint import pprint
 from socket_part.services import (
     get_query_values,
     log_print,
@@ -9,6 +6,7 @@ from socket_part.services import (
     authentication
 )
 from database_part import db
+import validators
 
 
 ROOM = 'common'
@@ -27,11 +25,12 @@ async def connect(sid, environ, auth):
         room = ROOM
     else:
         room = query['room']
-    sio.enter_room(sid=sid, room=room)
     response['room'] = room
+    sio.enter_room(sid=sid, room=room)
     async with db:
         await db.add_room_member(room=room, sid=sid, username=username)
         response['old_users'] = await db.get_room_members(room=room)
+        log_print(db_base=db.base, db_users=db.users)
     log_print(response=response)
     await sio.emit('ready', response, room=room, skip_sid=False)
 
@@ -47,6 +46,11 @@ async def connect(sid, environ, auth):
 @sio.event
 async def msg(sid, message):
     data = {'sid': sid, 'text': message}
+    type_ = validators.url(message)
+    if type_:
+        data['type'] = 'link'
+    else:
+        data['type'] = 'text'
     room_data = sio.rooms(sid=sid)
     room = get_room(list_to_extract_room_from=room_data, sid=sid)
     log_print(room=room, data=data)
@@ -55,7 +59,7 @@ async def msg(sid, message):
 
 @sio.event
 async def sharing(sid):
-    data = {'sid': sid, 'text': 'Start sharing file'}
+    data = {'sid': sid, 'text': 'Start sharing file', 'type': 'text'}
     room = get_room(list_to_extract_room_from=sio.rooms(sid=sid), sid=sid)
     log_print(room=room, data=data)
     await sio.emit('msg', data=data, room=room)
@@ -70,4 +74,5 @@ async def disconnect(sid):
     log_print(room=room)
     async with db:
         await db.remove_member(room=room, sid=sid)
+        log_print(db_base=db.base, db_users=db.users)
     sio.leave_room(sid=sid, room=room)

@@ -10,7 +10,7 @@ class DBMock:
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        for room, members in self.base.items():
+        for room, members in list(self.base.items()):
             if not members:
                 self.base.pop(room)
 
@@ -19,7 +19,7 @@ class DBMock:
         return self.base[room]
 
     async def get_room_members(self, room: str) -> t.Union[dict, None]:
-        return self.base.get(room)
+        return self.base.get(room, {})
 
     async def add_room_member(self, room: str, sid: str, username: str) -> str:
         _room = await self.get_room_members(room)

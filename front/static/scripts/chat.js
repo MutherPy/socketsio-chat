@@ -62,3 +62,9 @@ files_form.getElementsByTagName('button')[0].addEventListener(
     file_request.send(data)
 })
 
+document.getElementById('exit_btn').addEventListener(
+    'click',
+    function (e) {
+    window.location.href = window.location.origin
+})
+

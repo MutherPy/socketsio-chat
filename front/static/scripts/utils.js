@@ -6,10 +6,6 @@ let user_storage = function (sid, name, old_users){
     }
     let username = window.sessionStorage.getItem(sid)
     console.log(old_users)
-    // if (username === null){
-    //     window.sessionStorage.setItem(sid, name)
-    //     username = name
-    // }
     return username
 }
 
@@ -19,9 +15,20 @@ let create_message = function (msg) {
     let username = document.createElement('span')
     username.innerText = user_storage(msg.sid)
     block.appendChild(username)
-    let msg_text = document.createElement('span')
-    msg_text.innerText = msg['text']
-    block.appendChild(msg_text)
+    switch (msg.type) {
+        case 'text':
+            let msg_text = document.createElement('span')
+            msg_text.innerText = msg['text']
+            block.appendChild(msg_text)
+            break
+        case 'link':
+            let msg_link= document.createElement('a')
+            msg_link.href = msg['text']
+            msg_link.target = "_blank"
+            msg_link.innerText = 'see'
+            block.appendChild(msg_link)
+            break
+    }
     return block
 }
 

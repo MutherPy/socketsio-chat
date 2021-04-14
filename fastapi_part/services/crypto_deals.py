@@ -1,6 +1,16 @@
 from fernet import Fernet, InvalidToken
 import typing as t
 
+import jwt
+
+
+def encrypt_jwt(username: str, secret_key: bytes) -> str:
+    return jwt.encode({'user': username}, secret_key, algorithm="HS256")
+
+
+def decrypt_jwt(token: str, secret_key: bytes) -> dict:
+    return jwt.decode(token, secret_key, algorithms=["HS256"])
+
 
 def encrypt_path(path: str, key: bytes) -> str:
     f = Fernet(key)

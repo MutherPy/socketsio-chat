@@ -6,6 +6,7 @@ bidict==0.21.2
 certifi==2020.12.5
 chardet==4.0.0
 click==7.1.2
+decorator==5.0.7
 dnspython==2.1.0
 email-validator==1.1.2
 fastapi==0.63.0
@@ -38,6 +39,7 @@ ujson==3.2.0
 urllib3==1.26.4
 uvicorn==0.13.4
 uvloop==0.15.2
+validators==0.18.2
 watchgod==0.7
 websockets==8.1
 wsproto==1.0.0
